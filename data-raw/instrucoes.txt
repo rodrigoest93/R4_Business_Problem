@@ -1,0 +1,12 @@
+Pedido
+
+Há um aumento na quantidade de entregas pelo APP, e consequentemente um decaimento
+na avaliação dos clientes. Deseja-se descobrir os motivos do decaimento e sugerir alguma melhoria
+baseada em dados.
+
+
+Informações
+
+- Base de entregas de um app de delivery
+- Notas de Avaliacao de 1 a 5, sendo -1 = Não respondeu e NA = Não recebeu a avaliacao
+- As informacoes são de jan a outubro de 2019

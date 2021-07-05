@@ -1,0 +1,277 @@
+---
+title: "Resolvendo problema de Negócio"
+date: ""
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+---
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# pacotes utilizados
+library(magrittr)
+library(patchwork)
+```
+
+## Entendendo o Problema
+
+Há um aumento na quantidade de entregas pelo APP, e consequentemente um decaimento
+na avaliação dos clientes. Deseja-se descobrir os motivos do decaimento e sugerir alguma melhoria
+baseada em dados.
+
+
+## Conhecendo a base
+
+
+**Variáveis**
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+df_entregas <- readRDS("data/df_entrega.rds")
+
+#paleta de cores
+source("R/temas_graficos.R")
+cores <- data.frame(azul_escuro = "#00398F", azul_medio = "#0790E3", azul_claro = "#14D7FA",
+                       verde_bebe = "#07E3D1", verde_claro = "#08FBAC")
+cordegrade <- colorRampPalette(c("#00398F", "#08FBAC"))
+
+# caracteres
+df_entregas %>%
+  dplyr::select(where(is.character)) %>% 
+    skimr::skim() %>% 
+      knitr::kable(caption = "Caractéres")
+
+# Fatores
+df_entregas %>%
+  dplyr::select(where(is.factor)) %>% 
+    skimr::skim() %>% 
+      knitr::kable(caption = "Fatores")
+
+# Quantittivas
+df_entregas %>%
+  dplyr::select(where(is.numeric)) %>% 
+    skimr::skim() %>% 
+      knitr::kable(caption = "Quantitativas")
+
+# data
+df_entregas %>%
+  dplyr::select(where(lubridate::is.POSIXct)) %>% 
+    skimr::skim() %>% 
+      knitr::kable(caption = "Data")
+
+
+```
+
+
+
+**Informações**
+
+- Todos os pedidos analisados são de 2019
+
+- As notas de avaliação variam de 1 a 5, sendo -1 os clientes que não responderam e NA os clientes que não receberam a avaliação
+
+- Existe uma classificação de acordo com as notas dos clientes, que seguem as seguintes regras:
+  
+  * Ruim: Notas entre 1 e 3
+  * Medio: Notas igual a 4
+  * Bom: Notas igual a 5
+  
+
+## Primeiras Análises
+
+**Análise dp Cenário da empresa**
+
+Agora faremos as primeiras análises da nossa base, expondo o cenário que temos da mesma:
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.dim= c(10,7)}
+
+# quantiddde de pedidos por mes
+g1 <- df_entregas %>% 
+  dplyr::count(MES_REF) %>% 
+    ggplot2::ggplot() +
+      ggplot2::geom_line(ggplot2::aes(x = MES_REF, y = n), color = cores$verde_claro, size = 0.8) +
+        ggplot2::geom_label(ggplot2::aes(x = MES_REF, y = n, label = n),
+                            size = 2.5,  fill = cores$azul_escuro, color = "white", show.legend = FALSE) +
+          ggplot2::labs(title = "Volume de Pedidos por mês") +
+            ggplot2::scale_x_date(date_labels = "%b", date_breaks = "1 month") +
+              tema_semest_linha()
+
+
+# faturamento por mês
+g2 <- df_entregas %>% 
+  dplyr::group_by(MES_REF) %>%
+    dplyr::summarise(
+      Faturamento_total = sum(VALOR_PEDIDO)
+    ) %>% 
+      ggplot2::ggplot() +
+        ggplot2::geom_line(ggplot2::aes(x = MES_REF, y = Faturamento_total), color = cores$verde_claro, size = 0.8) +
+          ggplot2::geom_label(ggplot2::aes(x = MES_REF, y = Faturamento_total, 
+                                           label = paste("R$", round(Faturamento_total, 0), sep = " ")),
+                              size = 2.5,  fill = cores$azul_escuro, color = "white", show.legend = FALSE) +
+            ggplot2::labs(title = "Faturamento total por mês") +
+              ggplot2::scale_x_date(date_labels = "%b", date_breaks = "1 month") +
+                tema_semest_linha()
+
+
+# nota avaliacao poe mes
+g3 <- df_entregas %>% 
+  dplyr::group_by(MES_REF) %>%
+    dplyr::summarise(
+      Media_nota = round(mean(NOTA_ENTREGA, na.rm = TRUE),1)
+    ) %>% 
+    ggplot2::ggplot() +
+      ggplot2::geom_line(ggplot2::aes(x = MES_REF, y = Media_nota), color = cores$verde_claro, size = 0.8) +
+        ggplot2::geom_label(ggplot2::aes(x = MES_REF, y = Media_nota, label = Media_nota),
+                            size = 2.5,  fill = cores$azul_escuro, color = "white", show.legend = FALSE) +
+          ggplot2::labs(title = "Media de Avaliação por mês") +
+            ggplot2::scale_x_date(date_labels = "%b", date_breaks = "1 month") +
+              tema_semest_linha()
+
+# entregas por estado
+df_map <- readRDS("data/df_map.rds")
+
+g4 <- df_map %>% 
+  ggplot2::ggplot() +
+    ggplot2::geom_sf(ggplot2::aes(fill = qtd_entrega), size=.15) +
+      ggplot2::geom_sf_text(ggplot2::aes(label = abbrev_state, color = qtd_entrega),
+                  size = 2, show.legend = FALSE) +
+        ggplot2::labs(title = "Volume de entregas por estado") +
+          ggplot2::theme_void() +
+            ggplot2::scale_fill_gradient(name = "Volume de Entregas",
+                                         low = cores$verde_claro, high = cores$azul_escuro, na.value = "#d6d2d2") +
+              ggplot2::scale_color_gradient(low = cores$azul_escuro, high = "white", na.value = "black")
+
+g1 / g3 / g2 
+g4
+
+```
+
+
+
+- A partir de Junho, há um aumento considerável na quantidade de entregas, e a partir de Setembro, há um aumento repentino na quantidade de entregas 
+
+- O faturamento da empresa está crescendo no deccorrer dos meses, tendo um maior destaque no mês de Julho
+
+- Há uma queda brusca mês de Julho quanto as avaliações dos clientes 
+
+- O Estado de São Paulo é onde ocorre a maioria das entregas, sendo que a empresa atua em outros quatro Estados (Ceará, Minas Gerais, Paraná e Rio de Janeiro)
+
+
+Continuando as análises, vamos agora tratar de de questões de processos de entrega:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.dim= c(10,15)}
+source("R/funcao_graficos.R")
+
+#percentual notas de entrega
+g1 <- df_entregas %>%
+  dplyr::mutate(
+    NOTA_ENTREGA = as.factor(NOTA_ENTREGA)
+  ) %>%
+  grafico_barras(data = ., NOTA_ENTREGA, "Notas", "Percentual por nota de avaliação")
+
+
+# percentual por classe
+g2 <- df_entregas %>% 
+  grafico_barras(CLASSE, "Classes", " Percentua por Classe")  
+
+
+# percentual por meio de pagamento
+g3 <- df_entregas %>% 
+  grafico_barras(TIPO_PAGAMENTO, "Meios de Pagamentos", "Percentual por meio de pagamento")
+
+# turno da entrega
+g4 <- df_entregas %>% 
+  grafico_barras(TURNO, "Turnos", "Percentual por turnos de entrega")
+
+# tipo de entrega
+g5 <- df_entregas %>% 
+  grafico_barras(TIPO_ENTREGA, "Tipo de Entrega", "Percentual por tipo de entrega")
+
+# dia da semana 
+g6 <- df_entregas %>% 
+  grafico_barras(DIA, "Dias da semana", "Percentual por dia da semana")
+
+
+(g1 + g2) / (g3 + g4) / ( g5 + g6)
+
+
+```
+
+
+Já conseguimos enxergar alguns ponstos  de atençãp no processo de entregas, são estes:
+
+- Existe um percentual muito alto de pedidos que não receream a avaliação após a entrega do produto
+
+- A maioria dos clientes respondentes classifica a entrega como Boa
+
+- Existe um grande percentual de meios de pagamentos não informados
+
+- Os turnos da tarde e noite são os que possuem maior colune de entreda
+
+- Quase 90% dos clientes recebe o pedido, sendo este o tipo de entrega mais frequente
+
+- Sexta, Sábado e Domingo são os dias de maior volume de entregas
+
+
+Agora vamos tentar aprofundar nossa análise atacando os pontos levantados anteriormente:
+
+- Os problemas da não informação de avaliação e métodos de pagamento:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+
+df_entregas %>%
+  dplyr::filter(CLASSE == 'Sem Informação') %>% 
+    grafico_barras(MES_REF, "Meses", "Percentual de pedidos que não receberam avaliação por mês") +
+      ggplot2::scale_x_date(date_labels = "%b", date_breaks = "1 month")
+
+
+(df_entregas %>%
+  dplyr::filter(CLASSE == 'Sem Informação') %>% 
+    dplyr::group_by(TIPO_PAGAMENTO, MES_REF) %>% 
+      dplyr::summarise(
+        Quantidade = dplyr::n()
+      ) %>% 
+        ggplot2::ggplot() +
+          ggplot2::geom_line(ggplot2::aes(x = MES_REF, y = Quantidade, group = TIPO_PAGAMENTO, color = TIPO_PAGAMENTO)) +
+            ggplot2::scale_color_manual(name = "Tipo de Pagamento", 
+                          values = c(cores$azul_escuro, cores$azul_claro, cores$verde_bebe, cores$verde_claro)) +
+              ggplot2::scale_x_date(date_labels = "%b", date_breaks = "1 month") +
+                tema_semest_linha()) %>% 
+  plotly::ggplotly() %>% plotly::layout(heigh = 150)
+
+(df_entregas %>%
+  dplyr::filter(CLASSE == 'Sem Informação') %>% 
+    dplyr::group_by(TURNO, MES_REF) %>% 
+      dplyr::summarise(
+        Quantidade = dplyr::n()
+      ) %>% 
+        ggplot2::ggplot() +
+          ggplot2::geom_line(ggplot2::aes(x = MES_REF, y = Quantidade, group = TURNO, color = TURNO)) +
+            ggplot2::scale_color_manual(name = "Turno da entrega", 
+                          values = c(cores$azul_escuro, cores$azul_claro, cores$verde_bebe, cores$verde_claro)) +
+              ggplot2::scale_x_date(date_labels = "%b", date_breaks = "1 month") +
+                tema_semest_linha()) %>% 
+  plotly::ggplotly() %>% plotly::layout(heigh = 800)
+  
+
+(df_entregas %>%
+  dplyr::filter(CLASSE == 'Sem Informação') %>% 
+    dplyr::group_by(DIA, MES_REF) %>% 
+      dplyr::summarise(
+        Quantidade = dplyr::n()
+      ) %>% 
+        ggplot2::ggplot() +
+          ggplot2::geom_line(ggplot2::aes(x = MES_REF, y = Quantidade, group = DIA, color = DIA)) +
+            ggplot2::scale_color_manual(name = "Dia da entrega", values = cordegrade(7)) +
+              ggplot2::scale_x_date(date_labels = "%b", date_breaks = "1 month") +
+                tema_semest_linha()) %>% 
+  plotly::ggplotly()
+
+```
+
+
+
+
+
+
