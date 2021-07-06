@@ -204,7 +204,7 @@ g6 <- df_entregas %>%
 
 Já conseguimos enxergar alguns ponstos  de atençãp no processo de entregas, são estes:
 
-- Existe um percentual muito alto de pedidos que não receream a avaliação após a entrega do produto
+- Existe um percentual muito alto de pedidos que não receberam a avaliação após a entrega do produto
 
 - A maioria dos clientes respondentes classifica a entrega como Boa
 
@@ -221,12 +221,28 @@ Agora vamos tentar aprofundar nossa análise atacando os pontos levantados anter
 
 **Os problemas da não informação de avaliação e métodos de pagamento:**
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.dim= c(10,4)}
 
 df_entregas %>%
   dplyr::filter(CLASSE == 'Sem Informação') %>% 
     grafico_barras(MES_REF, "Meses", "Percentual de pedidos que não receberam avaliação por mês") +
       ggplot2::scale_x_date(date_labels = "%b", date_breaks = "1 month")
+
+
+df_entregas %>%
+  dplyr::filter(CLASSE == 'Sem Informação') %>%
+    dplyr::count(ESTADO, MES) %>% 
+      ggplot2::ggplot(ggplot2::aes(x = MES, y = n)) +
+        ggplot2::geom_col(ggplot2::aes(fill = ESTADO), show.legend = FALSE) +
+          ggplot2::scale_fill_manual(values = cordegrade(5)) +
+            ggplot2::theme(
+              panel.background = ggplot2::element_blank(), 
+              panel.border = ggplot2::element_blank(),
+              axis.title.y = ggplot2::element_blank(),
+              axis.text.y = ggplot2::element_blank(),
+              axis.ticks.y = ggplot2::element_blank()
+            ) +
+              ggplot2::facet_wrap(~ESTADO)
 
 
 (df_entregas %>%
@@ -241,7 +257,7 @@ df_entregas %>%
                           values = cordegrade(4)) +
               ggplot2::scale_x_date(date_labels = "%b", date_breaks = "1 month") +
                 tema_semest_linha()) %>% 
-  plotly::ggplotly(height = 300, width = 1000)
+  plotly::ggplotly(height = 250, width = 1000)
 
 (df_entregas %>%
   dplyr::filter(CLASSE == 'Sem Informação') %>% 
@@ -255,7 +271,7 @@ df_entregas %>%
                           values = cordegrade(4)) +
               ggplot2::scale_x_date(date_labels = "%b", date_breaks = "1 month") +
                 tema_semest_linha()) %>% 
-  plotly::ggplotly(height = 300, width = 1000)
+  plotly::ggplotly(height = 250, width = 1000)
   
 
 (df_entregas %>%
@@ -269,13 +285,116 @@ df_entregas %>%
             ggplot2::scale_color_manual(name = "Dia", values = cordegrade(7)) +
               ggplot2::scale_x_date(date_labels = "%b", date_breaks = "1 month") +
                 tema_semest_linha()) %>% 
-  plotly::ggplotly(height = 400, width = 1000)
+  plotly::ggplotly(height = 350, width = 1000)
 
 
 ```
 
+Com os gráficos acima pudemos perceber:
+
+- A partir do mês de Junho, onde houve atualização de plataforma, o número de pedidos que não receberam avaliações cresceu
+
+- Os pedidos sem informação de pagamento foram resolvidos em Julho
+
+- Em momento e local de maior quantidade de pedidos, são onde se concentram também os volumes de pedidos sem recebeimento de avaliação, que são os turnos da tarde e noite, nos dias sexta, sábado e domingo e no estado de São Paulo.
+
+
+**Avaliando os entregadores**
+
+Agora vamos avaliar os indicadores quanto aos entregadores:
+
+Ao todo, nossa base possui `r length(unique(df_entregas$ID_ENTREGADOR))` entregadores.
+
+```{r echo=FALSE,message=FALSE, warning=FALSE, fig.align='center', fig.dim= c(10,4)}
+
+df_entregas %>%
+  dplyr::distinct(ID_ENTREGADOR, ESTADO) %>%
+    dplyr::count(ESTADO) %>%
+      dplyr::mutate(
+        ESTADO = forcats::fct_reorder(ESTADO, n)
+      ) %>% 
+        ggplot2::ggplot(ggplot2::aes(x = ESTADO, y = n)) +
+          ggplot2::geom_col(fill = cores$azul_escuro) +
+            ggplot2::geom_label(ggplot2::aes(x = ESTADO, y = n, label = n), fill = cores$verde_claro, color = cores$azul_escuro) +
+              ggplot2::labs(x = "Estados", title  = "Quantidade de Entregadores por estado") +
+                tema_semest_barra_x()
+
+df_entregas %>%
+  dplyr::distinct(ID_ENTREGADOR, ESTADO) %>%
+    dplyr::count(ESTADO) %>%
+      dplyr::left_join(
+        df_entregas %>% 
+          dplyr::group_by(ESTADO) %>% 
+            dplyr::summarise(
+              media_nota = round(mean(NOTA_ENTREGA, na.rm = TRUE),1)
+            ), by = c("ESTADO" = "ESTADO")
+) %>%
+              dplyr::mutate(
+              ESTADO = forcats::fct_reorder(ESTADO, dplyr::desc(n))
+            ) %>% 
+          ggplot2::ggplot(ggplot2::aes(x = media_nota, y = n, color = ESTADO)) +
+            ggplot2::geom_point(size = 5) +
+              ggplot2::theme_minimal() +
+                ggplot2::labs(x = "Media da Nota de Avaliação da Entrega", y = "Quantidade de entregadores", title = "Quantidade de entregadores vs Média Nota Avaliação, por estado") +
+                  ggplot2::scale_color_manual(values = cordegrade(5))
+
+```
+
+Em relação a quantidade de entregadores por cada estado:
+
+- Não há uma relação evidente quanto entre a quantidade de entregadores e a média de nota de avaliação por estado
+
+Porém, vamo verificar a quantidade de entregadores em relação ao volume de pedidos de cada estado
+
+```{r echo=FALSE,message=FALSE, warning=FALSE, fig.align='center', fig.dim= c(10,4)}
+
+df_entregas %>%
+  dplyr::distinct(ID_ENTREGADOR, ESTADO) %>%
+    dplyr::group_by(ESTADO) %>% 
+      dplyr::summarise(
+        Qtd_entregadores = dplyr::n()
+      ) %>% 
+dplyr::left_join(
+      (df_entregas %>%
+        dplyr::group_by(ESTADO) %>%  
+          dplyr::summarise(
+            Vol_entregas = dplyr::n(),
+            media_nota = round(mean(NOTA_ENTREGA, na.rm = TRUE),1)
+          )), by = c("ESTADO" = "ESTADO")
+) %>% 
+            dplyr::mutate(
+              Media_entregador = round(Vol_entregas/Qtd_entregadores,1)
+            ) %>%
+              dplyr::arrange(dplyr::desc(Media_entregador)) %>% knitr::kable()
 
 
 
 
+df_entregas %>%
+  dplyr::distinct(ID_ENTREGADOR, ESTADO) %>%
+    dplyr::group_by(ESTADO) %>% 
+      dplyr::summarise(
+        Qtd_entregadores = dplyr::n()
+      ) %>% 
+dplyr::left_join(
+      (df_entregas %>%
+        dplyr::group_by(ESTADO) %>%  
+          dplyr::summarise(
+            Vol_entregas = dplyr::n(),
+            media_nota = round(mean(NOTA_ENTREGA, na.rm = TRUE),1)
+          )), by = c("ESTADO" = "ESTADO")
+) %>% 
+            dplyr::mutate(
+              Media_entregador = round(Vol_entregas/Qtd_entregadores,1),
+              ESTADO = forcats::fct_reorder(ESTADO, dplyr::desc(Media_entregador))
+            ) %>% 
+          ggplot2::ggplot(ggplot2::aes(x = media_nota, y = Media_entregador, color = ESTADO)) +
+            ggplot2::geom_point(size = 5) +
+              ggplot2::theme_minimal() +
+                ggplot2::labs(x = "Media da Nota de Avaliação da Entrega", y = "Media por Entregador", title = "Media por entregador vs Média Nota Avaliação, por estado") +
+                  ggplot2::scale_color_manual(values = cordegrade(5))
+    
+
+
+```
 

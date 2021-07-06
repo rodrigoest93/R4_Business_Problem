@@ -13,3 +13,4 @@ grafico_barras <- function(data, x, Eixox, Titulo) {
                 tema_semest_barra_x()
 
 }
+
