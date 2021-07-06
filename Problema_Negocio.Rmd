@@ -39,25 +39,25 @@ cordegrade <- colorRampPalette(c("#00398F", "#08FBAC"))
 # caracteres
 df_entregas %>%
   dplyr::select(where(is.character)) %>% 
-    skimr::skim() %>% 
+    skimr::skim() %>%
       knitr::kable(caption = "Caractéres")
 
 # Fatores
 df_entregas %>%
   dplyr::select(where(is.factor)) %>% 
-    skimr::skim() %>% 
+    skimr::skim() %>%
       knitr::kable(caption = "Fatores")
 
 # Quantittivas
 df_entregas %>%
   dplyr::select(where(is.numeric)) %>% 
-    skimr::skim() %>% 
+    skimr::skim() %>%
       knitr::kable(caption = "Quantitativas")
 
 # data
 df_entregas %>%
   dplyr::select(where(lubridate::is.POSIXct)) %>% 
-    skimr::skim() %>% 
+    skimr::skim() %>%
       knitr::kable(caption = "Data")
 
 
@@ -67,7 +67,7 @@ df_entregas %>%
 
 **Informações**
 
-- Todos os pedidos analisados são de 2019
+- Todos os pedidos analisados são de 2017
 
 - As notas de avaliação variam de 1 a 5, sendo -1 os clientes que não responderam e NA os clientes que não receberam a avaliação
 
@@ -77,10 +77,13 @@ df_entregas %>%
   * Medio: Notas igual a 4
   * Bom: Notas igual a 5
   
+- Houve um atualização no portal de entregas em meados de Junho/Julho 
+
+- Houve um investimento em comeciais para a empresa ficar mais conhecida em meados de Julho/Agora
 
 ## Primeiras Análises
 
-**Análise dp Cenário da empresa**
+**Análise do Cenário da empresa**
 
 Agora faremos as primeiras análises da nossa base, expondo o cenário que temos da mesma:
 
@@ -216,7 +219,7 @@ Já conseguimos enxergar alguns ponstos  de atençãp no processo de entregas, s
 
 Agora vamos tentar aprofundar nossa análise atacando os pontos levantados anteriormente:
 
-- Os problemas da não informação de avaliação e métodos de pagamento:
+**Os problemas da não informação de avaliação e métodos de pagamento:**
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center'}
 
@@ -235,10 +238,10 @@ df_entregas %>%
         ggplot2::ggplot() +
           ggplot2::geom_line(ggplot2::aes(x = MES_REF, y = Quantidade, group = TIPO_PAGAMENTO, color = TIPO_PAGAMENTO)) +
             ggplot2::scale_color_manual(name = "Tipo de Pagamento", 
-                          values = c(cores$azul_escuro, cores$azul_claro, cores$verde_bebe, cores$verde_claro)) +
+                          values = cordegrade(4)) +
               ggplot2::scale_x_date(date_labels = "%b", date_breaks = "1 month") +
                 tema_semest_linha()) %>% 
-  plotly::ggplotly() %>% plotly::layout(heigh = 150)
+  plotly::ggplotly(height = 300, width = 1000)
 
 (df_entregas %>%
   dplyr::filter(CLASSE == 'Sem Informação') %>% 
@@ -248,11 +251,11 @@ df_entregas %>%
       ) %>% 
         ggplot2::ggplot() +
           ggplot2::geom_line(ggplot2::aes(x = MES_REF, y = Quantidade, group = TURNO, color = TURNO)) +
-            ggplot2::scale_color_manual(name = "Turno da entrega", 
-                          values = c(cores$azul_escuro, cores$azul_claro, cores$verde_bebe, cores$verde_claro)) +
+            ggplot2::scale_color_manual(name = "Turno", 
+                          values = cordegrade(4)) +
               ggplot2::scale_x_date(date_labels = "%b", date_breaks = "1 month") +
                 tema_semest_linha()) %>% 
-  plotly::ggplotly() %>% plotly::layout(heigh = 800)
+  plotly::ggplotly(height = 300, width = 1000)
   
 
 (df_entregas %>%
@@ -263,10 +266,11 @@ df_entregas %>%
       ) %>% 
         ggplot2::ggplot() +
           ggplot2::geom_line(ggplot2::aes(x = MES_REF, y = Quantidade, group = DIA, color = DIA)) +
-            ggplot2::scale_color_manual(name = "Dia da entrega", values = cordegrade(7)) +
+            ggplot2::scale_color_manual(name = "Dia", values = cordegrade(7)) +
               ggplot2::scale_x_date(date_labels = "%b", date_breaks = "1 month") +
                 tema_semest_linha()) %>% 
-  plotly::ggplotly()
+  plotly::ggplotly(height = 400, width = 1000)
+
 
 ```
 
