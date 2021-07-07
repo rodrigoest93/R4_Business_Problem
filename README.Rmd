@@ -1,10 +1,7 @@
 ---
 title: "Resolvendo problema de Negócio"
 date: ""
-output:
-  prettydoc::html_pretty:
-    theme: cayman
-    highlight: github
+output: html_document
 ---
 
 
