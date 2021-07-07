@@ -1,22 +1,22 @@
 # pacote utilizado
 library(tidyverse)
 
-# carregar base de dados ----
+# carregar base de dados ---- ok
 df <- readxl::read_excel("data-raw/BASE_ENTREGAS.xlsx")
 
-# estrutura das variáveis ----
+# estrutura das variáveis ---- ok
 glimpse(df)
 
 # detalhamento
 library(skimr)
 
-#skim(df) %>% view()
+#skim(df) %>% view() ok
 
 # tipos de pagamento ----
 df %>%
   count(TIPO_PAGAMENTO)
 
-# reclassificando tipo de pagamento
+# reclassificando tipo de pagamento - Ver
 df <- df %>%
   mutate(
     TIPO_PAGAMENTO = case_when(
@@ -29,7 +29,7 @@ df <- df %>%
     )
   )
 
-# vendo com percentual
+# vendo com percentual - Relembrar
 library(scales)
 
 df %>%
@@ -71,7 +71,7 @@ df <- df %>%
 df %>%
   count(CLASSE)
 
-# data do pedido ----
+# data do pedido ---- VER
 str(df$DATA_PEDIDO)
 
 library(lubridate)
