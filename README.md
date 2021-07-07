@@ -1,5 +1,7 @@
-Untitled
+Resolvendo problema de Negócio
 ================
+Rodrigo Almeida
+07/07/2021
 
 ``` r
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, fig.align='center')
@@ -7,6 +9,13 @@ knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, fig.align='cent
 library(magrittr)
 library(patchwork)
 ```
+
+## Introdução
+
+Esta análise dfoi destinada ao Curso de R para problemas de negócio,
+ministrado na Semana da Estatística da Universidade Federal do Pará.
+Para Acesso ao Documento no RPubs, [clique
+aqui](https://rpubs.com/rodrigoest93/R4BusinessProblem).
 
 ## Demandante
 
