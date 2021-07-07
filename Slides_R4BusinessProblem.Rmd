@@ -52,13 +52,13 @@ knitr::include_graphics("Imagens/Baner.jpg")
 
 ### **O que são problemas de negócio?**
 
-Nada mais são do que situações reais, dentro das empresas, que precisam não só de análise técnica, mas uma associção desta com a área de negócio.
+Nada mais são do que situações reais, dentro das empresas, que precisam não só de análise técnica, mas uma associação desta com a área de negócio.
 
 ### **Exemplos**
 
 - Descobrir a causa de clientes de  uma empresa de telefonia estarem cancelando os planos
 
-- Entender onde o anuncio de uma empresa de publicidade deve ser exposto (metrô, shopping, etc)
+- Entender onde o anúncio de uma empresa de publicidade deve ser exposto (metrô, shopping, etc)
 
 - Prever qual os funcionários de uma determinada empresa que sairão no mês seguinte
 
@@ -101,7 +101,7 @@ Trate a sua demanda, mesmo que pequena, como um projeto. Desenhe-o, estime o tem
 
 **III. Recebimento da base**
 
-Além de entender o que que cada variável significa, sempre manter contato com quem lhe forneceu essa base de dados, pois você pode precisar de modificações, informações adicionais ou em outras visões. Além disso, dedique tempo e atenção ao tratamento dessa base
+Além de entender o que cada variável significa, sempre manter contato com quem lhe forneceu essa base de dados, pois você pode precisar de modificações, informações adicionais ou em outras visões. Além disso, dedique tempo e atenção ao tratamento dessa base
 
 ---
 # Uma recomendação de passo a passo

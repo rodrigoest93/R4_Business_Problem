@@ -1,16 +1,18 @@
 # pacote utilizado
 library(tidyverse)
 
-# carregar base de dados ---- ok
+# carregar base de dados ----
 df <- readxl::read_excel("data-raw/BASE_ENTREGAS.xlsx")
 
-# estrutura das variáveis ---- ok
+# estrutura das variáveis ----
 glimpse(df)
 
 # detalhamento
 library(skimr)
 
-#skim(df) %>% view() ok
+# mais informacões sobre as avriáveis
+skim(df) %>% view()
+
 
 # tipos de pagamento ----
 df %>%
