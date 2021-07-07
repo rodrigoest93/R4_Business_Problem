@@ -562,7 +562,7 @@ A partir das análises feitas, pudemos verificar o cenário atual, fazer algumas
 
 - Atuar junto aos entregadores do Estado de São Paulo, que possui quase 90% do volume de entregas
 
-## ConsideraçÕes Finais
+## Considerações Finais
 
 Ainda completarei esta análise, com mais informações e com alguma parte de modelagem estatística. Espero que tenham gostado!
 Para sugestões e críticas, podem entrar em contato pelo [meu Linkedin](https://www.linkedin.com/in/rodrigoalmeidafigueira/).

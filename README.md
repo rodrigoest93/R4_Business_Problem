@@ -674,7 +674,7 @@ algumas descobertas e sugerir algumas tomadas de decisões:
   - Atuar junto aos entregadores do Estado de São Paulo, que possui
     quase 90% do volume de entregas
 
-## ConsideraçÕes Finais
+## Considerações Finais
 
 Ainda completarei esta análise, com mais informações e com alguma parte
 de modelagem estatística. Espero que tenham gostado\! Para sugestões e
