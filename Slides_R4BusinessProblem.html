@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Resolvendo Problemas de Negócio</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Rodrigo Almeida e Miguel Souza" />
+    <meta name="date" content="2021-07-07" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Resolvendo Problemas de Negócio
+## Trilha de Aprendizado em R
+### Rodrigo Almeida e Miguel Souza
+### 07/07/2021
+
+---
+
+
+
+
+
+
+# Trilha de aprendizado em R
+
+&lt;img src="Imagens/Baner.jpg" width="1867" style="display: block; margin: auto;" /&gt;
+
+---
+# Quem somos?
+
+&lt;br/&gt;
+
+### Miguel Monteiro de Souza
+- Bacharel em Estatística pela UFPA 
+- Mestre em Estatística pela UFPA
+- Estatístico no CIAC/UFPA
+
+&lt;br/&gt;
+
+### Rodrigo Almeida Figueira
+- Bacharel em Estatística pela UFPA
+- MBA em Machine Learning pela USP/ESALQ
+- People Analytics na DASA
+
+
+---
+# Resolvendo Problemas de Negócio
+
+&lt;br/&gt;
+
+### **O que são problemas de negócio?**
+
+Nada mais são do que situações reais, dentro das empresas, que precisam não só de análise técnica, mas uma associação desta com a área de negócio.
+
+### **Exemplos**
+
+- Descobrir a causa de clientes de  uma empresa de telefonia estarem cancelando os planos
+
+- Entender onde o anúncio de uma empresa de publicidade deve ser exposto (metrô, shopping, etc)
+
+- Prever qual os funcionários de uma determinada empresa que sairão no mês seguinte
+
+---
+
+# Como organizar um demanda recebida?
+
+### **Boas práticas**
+
+- Colha o máximo de informações junto a área de negócio
+
+- Estude o assunto que vai trabalhar
+
+- Pense em um produto final, no que vai oferecer ao final de sua análise
+
+- Trabalhe bastante na comunicação dos seus resultados
+
+- Conheça os seus demandantes
+
+### **Não recomendo!**
+
+- Fazer análise sem conhecer o assunto
+
+- Ficar incomunicável e isolado sem contato com a área de negócios
+
+- "Ir fazendo" para ver o que vai gerar de resultado
+
+- Encher sua apresentaçõa ou seus resultados de métodos, fórmulas e coisas complexas
+
+---
+# Uma recomendação de passo a passo
+
+**I. Recebimento da demanda**
+
+Vamos falar com o demandante, entender quais os problemas e quais as percepções que ele tem sobre os mesmos. Além disso, vamos entender o processo, caso tenha, para que possamos ficar mais "por dentro" do tema
+
+ **II. Desenho do projeto**
+
+Trate a sua demanda, mesmo que pequena, como um projeto. Desenhe-o, estime o tempo que fará o mesmo e foque no que você vai entregar ao final de tudo, qual será seu produto para resolver o problema do demandante
+
+**III. Recebimento da base**
+
+Além de entender o que cada variável significa, sempre manter contato com quem lhe forneceu essa base de dados, pois você pode precisar de modificações, informações adicionais ou em outras visões. Além disso, dedique tempo e atenção ao tratamento dessa base
+
+---
+# Uma recomendação de passo a passo
+
+**IV. Análise**
+
+Essa geralmente é a parte mais tranquila, por incrível que pareça, pois é onde dominamos. É hora de mostrar nossos conhecimentos e focar no objetivo da nossa entrega, o nosso produto final!
+
+**V. Pré-Resultados**
+
+Este é o momento em que você começa a trabalhar com seus resultados. Prepare uma prévia do que montou ou está montando e verifique se está indo no caminho certo, se faz sentido para a área de negócios a sua análise rumo ao seu produto final, aliás, precisa fazer sentido para todos! Lembre de já trabalhar visuais e maneiras simples de mostrar suas análises
+
+**VI. Resultados**
+
+Suas análises precisam ser comunicadas de maneira simples, prática e que agregue valor! Use visuais que facilitem o entendimento da pessoa para quem apresentará. Essa talves seja uma das partes mais importantes, pois um erro ou uma comunicação mal feita pode ou gerar desconfiança no seu projeto, ou até mesmo terminá-lo
+
+---
+
+# Ferramentas para entrega de resultados
+
+### **R**
+- `tidyverse`
+- `Rmarkdown`
+- `Xaringan`
+- `Shiny`
+
+### Power Point
+- Apresentacões executivas
+- Paleta de cores
+- Figuras e visuais livrer
+
+### Outro
+- Google Slides
+- Power BI
+- Tableau ...
+
+---
+
+# Livros recomendados
+
+&lt;br/&gt;
+.pull-left[
+&lt;img src="Imagens/Storitelling_dados.jpeg" width=300 height=400&gt;
+]
+
+.pull-right[
+&lt;img src="Imagens/R4DS.jpg" width=300 height=400&gt;
+]
+
+---
+
+# Estudo de Caso
+
+**Demandante**
+
+Recebemos uma demanda de uma empresa de delivery que passa por um momento de crescimento e também de melhoria no processo de análise de dados. O time de Marketing fez um investimento em comerciais, para que a empresa ficasse mais conhecida e consequentemente aumentasse o número de pedidos. O Gestor da área entra em contato com nossa equipe para que possamos ajudá-los no direcionamento de algumas medidas.
+
+**Situação Problema**
+
+Há um aumento na quantidade de entregas pelo APP da empresa, e consequentemente um decaimento
+na avaliação dos clientes. Deseja-se descobrir os motivos do decaimento e sugerir alguma melhoria
+baseada em dados.
+
+---
+
+# Estudo de Caso
+
+**O que nos foi fornecido**
+
+- Base de dados
+
+
+|Variáveis      |
+|:--------------|
+|ID_PEDIDO      |
+|DATA_PEDIDO    |
+|VALOR_PEDIDO   |
+|TIPO_PAGAMENTO |
+|ID_ENTREGADOR  |
+|NOTA_ENTREGA   |
+|TIPO_ENTREGA   |
+|ESTADO         |
+
+---
+
+# Estudo de Caso
+
+**O que nos foi fornecido**
+
+- **Informações importantes**
+
+  **I.** Todos os pedidos analisados são de 2017
+  
+  **II.** As notas de avaliação variam de 1 a 5, sendo -1 os clientes que não responderam e NA os clientes que não receberam a avaliação
+  
+  **III.** Existe uma classificação de acordo com as notas dos clientes, que seguem as seguintes regras:
+  * Ruim: Notas entre 1 e 3
+  * Medio: Notas igual a 4
+  * Bom: Notas igual a 5
+  
+  **IV.** Houve um atualização no portal de entregas em meados de Junho/Julho
+
+  **V.** Houve um investimento em comeciais para a empresa ficar mais conhecida em meados de Julho/Agora
+
+---
+
+# O que vamos usar
+
+- Já aprendemos
+  * `dplyr`
+  * `tidyr`
+  * `readxlsx`
+  * `skimr`
+  * `ggplot2`
+
+- Vamos aprender
+  * `dplyr+` (across, case_when, etc)
+  * `stringr`
+  * `ggplot2+` (theme, função para gráficos, geom_sf)
+  * `lubridate`
+  * `geom_br`
+  
+---
+
+# Vamos para o R!
+
+&lt;br/&gt;
+&lt;br/&gt;
+
+&lt;img src="https://media.giphy.com/media/13HgwGsXF0aiGY/giphy.gif" style="display: block; margin: auto;" /&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

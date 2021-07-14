@@ -11,14 +11,16 @@ glimpse(df)
 library(skimr)
 
 # mais informacões sobre as avriáveis
-skim(df) %>% view()
+df %>%
+  skim() %>%
+    view()
 
 
 # tipos de pagamento ----
 df %>%
   count(TIPO_PAGAMENTO)
 
-# reclassificando tipo de pagamento - Ver
+# reclassificando tipo de pagamento
 df <- df %>%
   mutate(
     TIPO_PAGAMENTO = case_when(
@@ -56,7 +58,11 @@ df %>%
 
 # nota da entrega ----
 df %>%
-  count(NOTA_ENTREGA)
+  count(NOTA_ENTREGA) %>%
+    mutate(
+      percentual = n/sum(n),
+      percentual = percent(percentual, accuracy = .2)
+    )
 
 # tranformar nota da entrega
 df <- df %>%
@@ -99,7 +105,7 @@ estados <- geobr::read_state()
 estados <- estados %>%
   left_join(
     (
-      df_entregas %>%
+      df %>%
         group_by(ESTADO) %>%
         summarise(
           qtd_entrega = n(),
